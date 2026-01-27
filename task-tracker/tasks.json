@@ -12,5 +12,12 @@
     "status": "in-progress",
     "createdAt": "2026-01-27T07:44:55.691Z",
     "updatedAt": "2026-01-27T09:41:58.134Z"
+  },
+  {
+    "id": "1b3fd8c3-9ff2-49cc-b25e-1b10b4c07a3d",
+    "description": "done task",
+    "status": "done",
+    "createdAt": "2026-01-27T10:08:25.132Z",
+    "updatedAt": "2026-01-27T10:08:52.430Z"
   }
 ]

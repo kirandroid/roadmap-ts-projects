@@ -4,6 +4,19 @@ enum Status {
     done = "done",
 }
 
+function taskStatus(status: string | undefined): Status | undefined {
+    switch (status) {
+        case 'todo':
+            return Status.todo;
+        case 'in-progress':
+            return Status.inprogress;
+        case 'done':
+            return Status.done;
+        default:
+            return undefined;
+    }
+}
+
 export type task = {
     id: string;
     description?: string;
@@ -93,6 +106,23 @@ async function markTask(status: Status, taskId: string | undefined) {
     await update(updatedTask);
 }
 
+async function listTasks(statusRaw: string | undefined) {
+    const status = taskStatus(statusRaw);
+    const tasks = await readTasks();
+    var newTasks = <task[]>[];
+    if (status == undefined) {
+        newTasks = tasks;
+    } else {
+        const filteredTasks = tasks.filter((task) => task.status == status);
+        newTasks = filteredTasks;
+    }
+    newTasks.forEach(task => {
+        console.log(`TaskId: ${task.id} || Status: ${task.status}\nDescription: ${task.description}`);
+        console.log('=======================================');
+
+    });
+}
+
 function start() {
     const args = Bun.argv[2];
     if (args == null) {
@@ -102,10 +132,13 @@ function start() {
 
     switch (args) {
         case "add":
+            // Arg 3 -> task description
             addTask(Bun.argv[3]);
             break;
 
         case "update":
+            // Arg 3 -> task id
+            // Arg 4 -> task description
             updateTaskDetail(Bun.argv[3], Bun.argv[4])
             break;
 
@@ -114,14 +147,18 @@ function start() {
             break;
 
         case "list":
-            console.log("Listing a new task");
+            // Arg 3 -> task status
+            // can be undefined to get all list
+            listTasks(Bun.argv[3]);
             break;
 
         case "mark-in-progress":
+            // Arg 3 -> task id
             markTask(Status.inprogress, Bun.argv[3])
             break;
 
         case "mark-done":
+            // Arg 3 -> task id
             markTask(Status.done, Bun.argv[3])
             break;
 
