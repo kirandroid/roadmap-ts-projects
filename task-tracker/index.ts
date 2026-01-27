@@ -6,10 +6,10 @@ enum Status {
 
 export type task = {
     id: string;
-    description: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
+    description?: string;
+    status?: string;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 async function readTasks(): Promise<task[]> {
@@ -19,6 +19,33 @@ async function readTasks(): Promise<task[]> {
         return [];
     }
     return content;
+}
+
+async function add(tasks: task[]) {
+    await Bun.write("tasks.json", JSON.stringify(tasks));
+}
+
+
+async function update(updateTask: task) {
+    const tasks = await readTasks();
+    const taskIndex = tasks.findIndex((task) => task.id == updateTask.id);
+    if (taskIndex == -1) {
+        console.log("Id is incorrect or Task is not available to update");
+        process.exit(1);
+    }
+
+    const specificTask = tasks[taskIndex]!;
+    const updatedTask: task = {
+        id: updateTask.id,
+        description: updateTask.description ?? specificTask.description,
+        status: updateTask.status ?? specificTask.status,
+        createdAt: specificTask.createdAt,
+        updatedAt: new Date().toISOString(),
+    };
+    var newTasks = tasks;
+    newTasks[taskIndex] = updatedTask;
+    add(newTasks);
+    console.log("Task updated!");
 }
 
 async function addTask(taskDetail: string | undefined) {
@@ -37,8 +64,33 @@ async function addTask(taskDetail: string | undefined) {
 
     const tasks = await readTasks();
     const newTasks = [...tasks, newTask];
-    Bun.write("tasks.json", JSON.stringify(newTasks));
+    add(newTasks);
     console.log(`Task added successfully (ID: ${taskId})`);
+}
+
+async function updateTaskDetail(taskId: string | undefined, taskDetail: string | undefined) {
+    if (taskId == null || taskDetail == null) {
+        console.log("TaskId or Task details cannot be empty");
+        process.exit(1);
+    }
+
+    const updatedTask: task = {
+        id: taskId,
+        description: taskDetail,
+    };
+    await update(updatedTask);
+}
+
+async function markTask(status: Status, taskId: string | undefined) {
+    if (taskId == null || status == null) {
+        console.log("TaskId or status cannot be empty");
+        process.exit(1);
+    }
+    const updatedTask: task = {
+        id: taskId,
+        status: status,
+    }
+    await update(updatedTask);
 }
 
 function start() {
@@ -54,7 +106,7 @@ function start() {
             break;
 
         case "update":
-            console.log("Updating a new task");
+            updateTaskDetail(Bun.argv[3], Bun.argv[4])
             break;
 
         case "delete":
@@ -66,11 +118,11 @@ function start() {
             break;
 
         case "mark-in-progress":
-            console.log("Mark task as in progress");
+            markTask(Status.inprogress, Bun.argv[3])
             break;
 
         case "mark-done":
-            console.log("Mark task as done");
+            markTask(Status.done, Bun.argv[3])
             break;
 
         default:
