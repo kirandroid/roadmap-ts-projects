@@ -123,6 +123,16 @@ async function listTasks(statusRaw: string | undefined) {
     });
 }
 
+async function deleteTask(taskId: string | undefined) {
+    if (taskId == undefined) {
+        console.log("Task id cannot be empty");
+        process.exit(1);
+    }
+    const tasks = await readTasks();
+    const newTasks = tasks.filter(task => task.id !== taskId);
+    await add(newTasks);
+}
+
 function start() {
     const args = Bun.argv[2];
     if (args == null) {
@@ -143,7 +153,8 @@ function start() {
             break;
 
         case "delete":
-            console.log("Deleting a new task");
+            // Arg 3 -> task id
+            deleteTask(Bun.argv[3]);
             break;
 
         case "list":
