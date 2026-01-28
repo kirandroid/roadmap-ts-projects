@@ -92,6 +92,22 @@ export class ConsoleView {
 
   }
 
+  async askPlayAgain(): Promise<boolean> {
+    console.log("\nWould you like to play again?");
+    const input = await this.rl.question("Enter 'y' for yes or 'n' for no: ");
+    const normalized = input.trim().toLowerCase();
+
+    if (normalized === 'y' || normalized === 'yes') {
+      return true;
+    }
+    if (normalized === 'n' || normalized === 'no') {
+      return false;
+    }
+
+    console.log("Invalid input. Please enter 'y' or 'n'.");
+    return this.askPlayAgain();
+  }
+
   close() {
     this.rl.close();
   }
