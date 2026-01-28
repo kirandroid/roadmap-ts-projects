@@ -27,6 +27,11 @@ export type task = {
 
 async function readTasks(): Promise<task[]> {
     const tasks = Bun.file("tasks.json");
+    if (tasks.size == 0) {
+        console.log("No Data");
+        process.exit(1);
+    }
+
     const content = await tasks.json();
     if (content == null) {
         return [];
