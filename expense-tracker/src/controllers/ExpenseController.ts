@@ -1,4 +1,5 @@
 import type { Expense } from "../models/Expense";
+import type { ExpenseFilter } from "../models/ExpenseFilter";
 import { ExpenseService } from "../services/ExpenseService";
 import { IdService } from "../services/IdService";
 import { ConsoleView } from "../views/ConsoleView";
@@ -58,9 +59,9 @@ export class ExpenseController {
         }
     }
 
-    async summaryOfExpenses({ month, year }: { month?: number; year?: number } = {}) {
+    async summaryOfExpenses({ month, year }: ExpenseFilter = {}) {
         try {
-            const total = await this.expenseService.summaryOfExpenses(month, year);
+            const total = await this.expenseService.summaryOfExpenses({ month, year });
             this.ui.displayExpenseSummary(total, month, year);
         } catch (error) {
             this.ui.displayTransactionError('summarizing expenses');

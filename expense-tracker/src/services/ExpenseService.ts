@@ -1,4 +1,5 @@
 import type { Expense } from "../models/Expense";
+import type { ExpenseFilter } from "../models/ExpenseFilter";
 import { FileStorage } from "../storage/FileStorage";
 import { EXPENSES_FILE_PATH } from "../utils/constants";
 
@@ -56,7 +57,7 @@ export class ExpenseService {
     }
   }
 
-  async summaryOfExpenses(month: number | undefined, year: number | undefined): Promise<number> {
+  async summaryOfExpenses({ month, year }: ExpenseFilter = {}): Promise<number> {
     try {
       const expenses = await this.listExpenses();
       let total = 0;

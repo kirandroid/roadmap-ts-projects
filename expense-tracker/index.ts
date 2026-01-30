@@ -6,7 +6,7 @@ async function start() {
 
   // await controller.addExpense('Tomato Food', 390);
   // await controller.listExpenses();
-  // await controller.summaryOfExpenses();
+  await controller.summaryOfExpenses({ month: 1, year: 2020 });
   // await controller.deleteExpense(8);
   // await controller.listExpenses();
 }
