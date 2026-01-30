@@ -62,7 +62,12 @@ export class ExpenseController {
     async summaryOfExpenses({ month, year }: ExpenseFilter = {}) {
         try {
             const total = await this.expenseService.summaryOfExpenses({ month, year });
-            this.ui.displayExpenseSummary(total, month, year);
+            let monthName = '';
+            if (month) {
+                const date = new Date(2000, month - 1, 1);
+                monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date);
+            }
+            this.ui.displayExpenseSummary(total, monthName, year);
         } catch (error) {
             this.ui.displayTransactionError('summarizing expenses');
         }

@@ -10,7 +10,7 @@ export class ConsoleView {
         console.log(`Error occured when ${transaction}`);  
     }
 
-    displayExpenseSummary(totalExpense: number, month?: number, year?: number): void {
+    displayExpenseSummary(totalExpense: number, month?: string, year?: number): void {
         if (month && year) {
             console.log(`Total expenses for ${month}/${year}: $${totalExpense}`);
             return;
