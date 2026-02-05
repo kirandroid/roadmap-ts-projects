@@ -1,6 +1,6 @@
 {
-  "name": "git-user-activity",
-  "module": "src/app.ts",
+  "name": "unit-converter",
+  "module": "index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
