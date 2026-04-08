@@ -1,4 +1,5 @@
 import { UnitController } from "./src/controllers/unit_controllers";
+import type { BunRequest } from "bun";
 
 const unitController = new UnitController();
 
