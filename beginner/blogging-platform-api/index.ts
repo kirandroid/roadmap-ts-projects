@@ -3,6 +3,7 @@ import { withValidation } from "./src/middlewares/validation";
 import { UserSchema } from "./src/types/user";
 import type { BunRequest } from "bun";
 import index from "./src/views/index.html";
+import { globalErrorHandler } from "./src/middlewares/globalErrorHandler";
 
 const dbUrl = process.env.DATABASE_URL;
 
@@ -32,6 +33,9 @@ const server = Bun.serve({
     "/post": () => new Response("Get a single blog post"),
     "/posts": () => new Response("Get all blog posts"),
     "/filter": () => new Response("Filter blog posts by a search term"),
+  },
+  error(error) {
+    return globalErrorHandler(error);
   },
 });
 

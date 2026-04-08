@@ -2,6 +2,7 @@
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `User_username_key`(`username`),

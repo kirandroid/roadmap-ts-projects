@@ -1,11 +1,11 @@
 import type { BunRequest } from "bun";
-import { UserSchema } from "../types/user";
+import { UserSchema, type User } from "../types/user";
+import { UserService } from "../services/userService";
 
 export const registerUser = async (
   req: Request,
-  validatedData: any,
+  validatedData: User,
 ): Promise<Response> => {
-  console.log(validatedData);
-  //  await UserService.createUser(validatedData);
+  await UserService.createUser(validatedData);
   return Response.json({ status: "success" }, { status: 200 });
 };
