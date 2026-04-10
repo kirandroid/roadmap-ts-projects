@@ -10,6 +10,15 @@ import type { BunRequest } from "bun";
 import index from "./src/views/index.html";
 import { globalErrorHandler } from "./src/middlewares/globalErrorHandler";
 import { withAuth } from "./src/middlewares/authMiddleware";
+import { TagSchema } from "./src/types/post";
+import {
+  createTag,
+  deleteTag,
+  getAllTags,
+  updateTag,
+} from "./src/controllers/postController";
+import { withParams } from "./src/middlewares/paramsValidation";
+import { IdParamSchema } from "./src/types/common";
 
 const dbUrl = process.env.DATABASE_URL;
 
@@ -35,6 +44,16 @@ const server = Bun.serve({
     },
     "/refresh": {
       POST: withValidation(RefreshSchema, refreshAccessToken),
+    },
+    "/tag/:id": {
+      PATCH: withAuth(
+        withParams(IdParamSchema, withValidation(TagSchema, updateTag)),
+      ),
+      DELETE: withAuth(withParams(IdParamSchema, deleteTag)),
+    },
+    "/tags": {
+      POST: withAuth(withValidation(TagSchema, createTag)),
+      GET: withAuth(getAllTags),
     },
     "/create": {
       POST: withAuth(async () => new Response("Create a new blog post")),

@@ -21,14 +21,16 @@ export const withAuth = (
       throw new AppError("Unauthorized: No token provided", 401);
     }
 
+    let decoded;
     try {
-      const decoded = jwt.verify(
+      decoded = jwt.verify(
         token,
         process.env.JWT_SECRET || "fallback-secret",
       ) as AuthenticatedUser;
-      return await handler(req, decoded, validatedData);
     } catch (error) {
       throw new AppError("Unauthorized: Invalid or expired token", 401);
     }
+
+    return await handler(req, decoded, validatedData);
   };
 };
