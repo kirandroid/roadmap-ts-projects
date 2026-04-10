@@ -6,4 +6,11 @@ export const TagSchema = z
   })
   .strict();
 
+export const CategorySchema = z
+  .object({
+    name: z.string().min(1, "Category name is required"),
+  })
+  .strict();
+
 export type Tag = z.infer<typeof TagSchema>;
+export type Category = z.infer<typeof CategorySchema>;

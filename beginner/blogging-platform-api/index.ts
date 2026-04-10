@@ -10,11 +10,15 @@ import type { BunRequest } from "bun";
 import index from "./src/views/index.html";
 import { globalErrorHandler } from "./src/middlewares/globalErrorHandler";
 import { withAuth } from "./src/middlewares/authMiddleware";
-import { TagSchema } from "./src/types/post";
+import { CategorySchema, TagSchema } from "./src/types/post";
 import {
+  createCategory,
   createTag,
+  deleteCategory,
   deleteTag,
+  getAllCategory,
   getAllTags,
+  updateCategory,
   updateTag,
 } from "./src/controllers/postController";
 import { withParams } from "./src/middlewares/paramsValidation";
@@ -54,6 +58,19 @@ const server = Bun.serve({
     "/tags": {
       POST: withAuth(withValidation(TagSchema, createTag)),
       GET: withAuth(getAllTags),
+    },
+    "/category/:id": {
+      PATCH: withAuth(
+        withParams(
+          IdParamSchema,
+          withValidation(CategorySchema, updateCategory),
+        ),
+      ),
+      DELETE: withAuth(withParams(IdParamSchema, deleteCategory)),
+    },
+    "/categories": {
+      POST: withAuth(withValidation(CategorySchema, createCategory)),
+      GET: withAuth(getAllCategory),
     },
     "/create": {
       POST: withAuth(async () => new Response("Create a new blog post")),

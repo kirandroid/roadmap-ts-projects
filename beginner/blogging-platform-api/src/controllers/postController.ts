@@ -1,5 +1,5 @@
 import { PostService } from "../services/postService";
-import type { Tag } from "../types/post";
+import type { Category, Tag } from "../types/post";
 
 export const createTag = async (
   _req: Request,
@@ -41,5 +41,48 @@ export const deleteTag = async (
   params: { id: number },
 ): Promise<Response> => {
   await PostService.deleteTag(params.id);
+  return Response.json({ status: "success" }, { status: 200 });
+};
+
+export const createCategory = async (
+  _req: Request,
+  _user: any,
+  validatedData: Category,
+): Promise<Response> => {
+  await PostService.createCategory(validatedData);
+  return Response.json({ status: "success" }, { status: 200 });
+};
+
+export const getAllCategory = async (
+  _req: Request,
+  _user: any,
+): Promise<Response> => {
+  const allCategories = await PostService.getCategories();
+
+  return Response.json(
+    {
+      status: "success",
+      data: allCategories,
+    },
+    { status: 200 },
+  );
+};
+
+export const updateCategory = async (
+  _req: any,
+  _user: any,
+  validatedData: Category,
+  params: { id: number },
+): Promise<Response> => {
+  await PostService.updateCategory(params.id, validatedData.name);
+  return Response.json({ status: "success" }, { status: 200 });
+};
+
+export const deleteCategory = async (
+  _req: any,
+  _user: any,
+  params: { id: number },
+): Promise<Response> => {
+  await PostService.deleteCategory(params.id);
   return Response.json({ status: "success" }, { status: 200 });
 };
