@@ -22,6 +22,10 @@ export class UserService {
     return await prisma.user.findUnique({ where: { username } });
   }
 
+  static async getUserById(userId: number) {
+    return await prisma.user.findUnique({ where: { id: userId } });
+  }
+
   static async updateRefreshToken(userId: number, refreshToken: string | null) {
     return await prisma.user.update({
       where: { id: userId },
@@ -45,30 +49,31 @@ export class UserService {
     const tokens = await this.generateAndSaveTokens(user.id);
     return {
       ...tokens,
-      user: { id: user.id, name: user.name, username: user.username },
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+      },
     };
   }
 
   // Handle Refresh Logic
-  static async refreshTokens(refreshToken: string) {
+  static async refreshTokens(oldRefreshToken: string) {
     try {
-      const decoded = jwt.verify(refreshToken, JWT_SECRET) as {
+      const decoded = jwt.verify(oldRefreshToken, JWT_SECRET) as {
         userId: number;
       };
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.userId },
-      });
+      const user = await this.getUserById(decoded.userId);
 
-      if (!user || user.refreshToken !== refreshToken) {
+      if (!user || user.refreshToken !== oldRefreshToken) {
+        if (user) await this.updateRefreshToken(user.id, null);
         throw new AppError("Invalid refresh token", 403);
       }
 
-      // We only need to issue a new Access Token, but we can also rotate the refresh token here if desired
-      const newAccessToken = jwt.sign({ userId: user.id }, JWT_SECRET, {
-        expiresIn: "15m",
-      });
+      const tokens = await this.generateAndSaveTokens(user.id);
 
-      return { accessToken: newAccessToken };
+      return tokens;
     } catch (error) {
       throw new AppError("Refresh token expired or invalid", 403);
     }

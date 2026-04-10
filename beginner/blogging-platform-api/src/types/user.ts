@@ -2,15 +2,16 @@ import { z } from "zod";
 
 export const UserSchema = z
   .object({
-    name: z.string().min(2, "Name is too short"),
     username: z.string().min(2, "Username is too short"),
+    firstName: z.string().min(2, "First Name is too short"),
+    lastName: z.string().min(2, "Last Name is too short"),
     password: z.string().min(6, "Password must be at least 6 characters"),
   })
   .strict();
 
 export const LoginSchema = z
   .object({
-    username: z.string().min(1, "Invalid username"),
+    username: z.string().min(2, "Invalid username"),
     password: z.string().min(6, "Password must be at least 6 characters"),
   })
   .strict();

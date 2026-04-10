@@ -36,14 +36,28 @@ const server = Bun.serve({
     "/refresh": {
       POST: withValidation(RefreshSchema, refreshAccessToken),
     },
-    "/create": () => new Response("Create a new blog post"),
-    "/update": () => new Response("Update an existing blog post"),
-    "/delete": () => new Response("Delete an existing blog post"),
+    "/create": {
+      POST: withAuth(async () => new Response("Create a new blog post")),
+    },
+    "/update": {
+      PUT: withAuth(async () => new Response("Update an existing blog post")),
+    },
+    "/delete": {
+      DELETE: withAuth(
+        async () => new Response("Delete an existing blog post"),
+      ),
+    },
     "/post": {
       GET: withAuth(async () => new Response("Get a single blog post")),
     },
-    "/posts": () => new Response("Get all blog posts"),
-    "/filter": () => new Response("Filter blog posts by a search term"),
+    "/posts": {
+      GET: withAuth(async () => new Response("Get all blog posts")),
+    },
+    "/filter": {
+      GET: withAuth(
+        async () => new Response("Filter blog posts by a search term"),
+      ),
+    },
   },
   error(error) {
     return globalErrorHandler(error);
