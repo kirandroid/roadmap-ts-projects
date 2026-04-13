@@ -34,7 +34,7 @@ export class UserService {
   }
 
   static async generateAndSaveTokens(userId: number) {
-    const accessToken = jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
+    const accessToken = jwt.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
     const refreshToken = jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
 
     await this.updateRefreshToken(userId, refreshToken);
