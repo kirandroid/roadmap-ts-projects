@@ -1,21 +1,17 @@
 import { z } from "zod";
 
-// export const TagSchema = z
-//   .object({
-//     name: z.string().min(1, "Tag name is required"),
-//   })
-//   .strict();
+export const PostSchema = z
+  .object({
+    title: z.string().min(1, "Title is required"),
+    content: z.string().min(1, "Content is required"),
+    categories: z.array(z.number()).optional(),
+    tags: z.array(z.number()).optional(),
+  })
+  .strict();
 
-// export const TagQuerySchema = z.object({
-//   search: z.string().optional(),
-// });
+export const PostQuerySchema = z.object({
+  search: z.string().optional(),
+});
 
-// export const CategorySchema = z
-//   .object({
-//     name: z.string().min(1, "Category name is required"),
-//   })
-//   .strict();
-
-// export type Tag = z.infer<typeof TagSchema>;
-// export type TagQuery = z.infer<typeof TagQuerySchema>;
-// export type Category = z.infer<typeof CategorySchema>;
+export type Post = z.infer<typeof PostSchema>;
+export type PostQuery = z.infer<typeof PostQuerySchema>;

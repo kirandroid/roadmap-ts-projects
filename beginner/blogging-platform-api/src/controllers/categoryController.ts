@@ -16,8 +16,6 @@ export const getAllCategory = async (
   _user: any,
   query: CategoryQuery,
 ): Promise<Response> => {
-  console.log(query.search);
-
   const allCategories = await CategoryService.getCategories(query.search);
 
   return Response.json(
