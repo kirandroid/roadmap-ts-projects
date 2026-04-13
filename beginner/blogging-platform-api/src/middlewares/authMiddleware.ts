@@ -6,20 +6,12 @@ export interface AuthenticatedUser {
   userName: string;
 }
 
-export const withAuth = (
-  handler: (
-    req: Request,
-    user: AuthenticatedUser,
-    validatedData?: any,
-  ) => Promise<Response>,
-) => {
-  return async (req: Request, validatedData?: any): Promise<Response> => {
+export const withAuth = (handler: any) => {
+  return async (req: Request): Promise<Response> => {
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.split(" ")[1];
 
-    if (!token) {
-      throw new AppError("Unauthorized: No token provided", 401);
-    }
+    if (!token) throw new AppError("Unauthorized: No token provided", 401);
 
     let decoded;
     try {
@@ -31,6 +23,6 @@ export const withAuth = (
       throw new AppError("Unauthorized: Invalid or expired token", 401);
     }
 
-    return await handler(req, decoded, validatedData);
+    return await handler(req, decoded);
   };
 };

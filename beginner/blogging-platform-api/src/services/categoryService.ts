@@ -1,15 +1,20 @@
 import { prisma } from "../db/prisma";
 import type { Category } from "../types/category";
-
 import { AppError } from "../utils/appError";
 
-export class PostService {
+export class CategoryService {
   static async getCategory(id: number) {
     return await prisma.category.findUnique({ where: { id } });
   }
 
-  static async getCategories(search?: string) {
-    return await prisma.category.findMany();
+  static async getCategories(searchTerm?: string) {
+    return await prisma.category.findMany({
+      where: {
+        name: {
+          contains: searchTerm,
+        },
+      },
+    });
   }
 
   static async createCategory(category: Category) {
