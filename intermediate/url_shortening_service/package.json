@@ -15,6 +15,8 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "zod": "^4.3.6",
+    "zod-validation-error": "^5.0.0"
   }
 }
