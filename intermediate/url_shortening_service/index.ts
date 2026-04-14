@@ -3,7 +3,11 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { withValidation } from "./src/middlewares/validation";
 import { UrlSchema } from "./src/types/url";
-import { shortenUrl } from "./src/controllers/shortenController";
+import {
+  redirectShortenUrl,
+  shortenUrl,
+} from "./src/controllers/shortenController";
+import { withParams } from "./src/middlewares/paramsValidation";
 
 export const drizzleDBClient = drizzle(process.env.DATABASE_URL!);
 
@@ -14,6 +18,9 @@ const server = Bun.serve({
   routes: {
     "/shorten": {
       POST: withValidation(UrlSchema, shortenUrl),
+    },
+    "/go/:url": {
+      GET: withParams(UrlSchema, redirectShortenUrl),
     },
     "/shorten/:shortcode": {
       GET: () => Response.json({}),
