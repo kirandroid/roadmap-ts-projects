@@ -1,9 +1,14 @@
 import z from "zod";
 
-export const UrlSchema = z
+export const UrlParamSchema = z
   .object({
-    url: z.string().min(1, "URL is required"),
+    slug: z.string().min(1),
   })
   .strict();
 
-export type Url = z.infer<typeof UrlSchema>;
+export const UpdateUrlSchema = z.object({
+  targetUrl: z.url("Invalid destination URL"),
+});
+
+export type UrlParams = z.infer<typeof UrlParamSchema>;
+export type UpdateUrlBody = z.infer<typeof UpdateUrlSchema>;
