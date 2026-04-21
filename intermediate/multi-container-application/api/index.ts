@@ -1,6 +1,8 @@
 import express from "express";
 import * as mongoose from "mongoose";
 import { Todo } from "./src/schema/todo_schema";
+import "dotenv/config";
+import cors from "cors";
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -11,6 +13,7 @@ if (!databaseUrl) {
 await mongoose.connect(databaseUrl);
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get("/todos", async (req, res) => {
